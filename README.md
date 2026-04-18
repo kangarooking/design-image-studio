@@ -2,7 +2,7 @@
 
 把一个模糊的视觉需求，直接变成可落地生成的高质量设计图。
 
-`design-image-studio` 是一个面向创意与设计场景的 Agent Skill。它不是简单地把一句话塞给文生图模型，而是先把需求整理成设计简报，再把设计简报转成更强的结构化 Prompt，最后直接调用 Volcengine Seedream 生成图片。
+`design-image-studio` 是一个面向创意与设计场景的 Agent Skill。它不是简单地把一句话塞给文生图模型，而是先读取并保留完整的 Claude 设计系统提示词，再把需求整理成设计推理和结构化 brief，最后把这些设计判断压缩成更强的生图 Prompt，并直接调用 Volcengine Seedream 生成图片。
 
 它适合做的不是泛泛的“AI 生图”，而是更接近设计工作流的任务：海报、商品图、PPT 配图、信息图风格视觉、教学演示图。
 
@@ -19,6 +19,17 @@
 
 `design-image-studio` 的目标，就是把“设计判断”补回到生图链路里：先明确用途、受众、构图、气质、留白、安全区和禁忌项，再去调模型。
 
+## 核心设计
+
+这个 skill 现在不是简单的 prompt 模板器，而是一个“设计编译器”：
+
+1. 保留完整的 `Claude-Design-Sys-Prompt` 作为上游设计脑
+2. 先生成 `design_reasoning`
+3. 再压缩成 `compiled_brief`
+4. 最后才生成给图片模型吃的短 Prompt
+
+也就是说，真正做设计判断的是完整的设计系统提示词，而不是几条零散的风格关键词。
+
 ## 它解决了什么问题
 
 - 普通生图 Prompt 太泛，结果不稳定
@@ -29,20 +40,23 @@
 
 ## 它是怎么工作的
 
-`design-image-studio` 把生图拆成三层：
+`design-image-studio` 把生图拆成四层：
 
 1. **任务识别层**  
    先判断这是海报、商品图、PPT 配图、信息图还是教学演示图，不同场景使用不同的默认构图和约束。
 
-2. **设计简报层**  
-   把用户原始需求整理成结构化 brief，包括目标、受众、使用场景、视觉重点、构图策略、风格、情绪、限制项和 avoid-list。
+2. **设计推理层**  
+   基于完整的 Claude 设计系统提示词，整理出设计推理：目标、受众、使用场景、视觉系统、主次层级、留白策略、anti-filler 规则和 anti-slop 规则。
 
-3. **生成执行层**  
-   基于 brief 组装最终 Prompt，选择合适的 Volcengine Seedream 模型、分辨率和比例，并直接生成图片。
+3. **编译简报层**  
+   把设计推理压缩成结构化 `compiled_brief`，只保留对生图真正有用的部分。
+
+4. **生成执行层**  
+   基于 `compiled_brief` 组装最终 Prompt，选择合适的 Volcengine Seedream 模型、分辨率和比例，并直接生成图片。
 
 整个流程由两个脚本组成：
 
-- `scripts/design_image.py`：设计导向的包装层
+- `scripts/design_image.py`：设计编译层
 - `scripts/generate.py`：Volcengine Seedream 生成执行层
 
 ## 支持的场景
@@ -99,6 +113,7 @@ export ARK_API_KEY="your_volcengine_ark_api_key"
 python3 scripts/design_image.py \
   --task poster \
   --brief "为 AI 训练营生成一张高冲击力招生海报，强调速度、增长、实战" \
+  --direction balanced \
   --aspect 3:4 \
   --quality final \
   --output ai-training-camp-poster.png
@@ -112,6 +127,12 @@ python3 scripts/design_image.py \
   --brief "高端陶瓷咖啡杯电商首图，温暖晨光，突出釉面质感" \
   --prompt-only
 ```
+
+脚本会输出三层中间结果：
+
+- `design_reasoning`
+- `compiled_brief`
+- `prompt`
 
 ## 示例命令
 
@@ -179,6 +200,9 @@ design-image-studio/
 ├── assets/
 │   └── demo-poster.png
 ├── references/
+│   ├── claude-design-sys-prompt-full.txt
+│   ├── claude-design-map.md
+│   ├── design-compiler.md
 │   ├── design-principles.md
 │   ├── prompt-framework.md
 │   ├── model-routing.md
@@ -199,10 +223,10 @@ design-image-studio/
 
 这个 skill 的上层设计判断主要来自两部分：
 
-- 对 Claude 设计系统提示词的提炼：保留其中关于构图、品牌气质、留白、安全区、避免 AI slop 的设计原则
+- 完整保留并使用 Claude 设计系统提示词，而不是只保留摘要
 - 对 Volcengine Seedream 能力的封装：保留其模型路由、成本控制、图生图、多图融合和错误处理能力
 
-因此它本质上是“设计方法 + 生图执行”的组合，而不是单纯的 API 包装器。
+因此它本质上是“完整设计系统 + 生图执行”的组合，而不是单纯的 API 包装器。
 
 ## 已知边界
 

@@ -351,10 +351,13 @@ def run_generation(args):
         "model": model_id,
         "prompt": args.prompt,
         "size": args.size,
-        "output_format": args.output_format,
         "response_format": args.response_format,
         "watermark": args.watermark,
     }
+
+    # Seedream 4.5 rejects the `output_format` parameter entirely.
+    if model_id != "doubao-seedream-4-5-251128":
+        gen_kwargs["output_format"] = args.output_format
 
     if images:
         gen_kwargs["image"] = images if len(images) > 1 else images[0]
@@ -379,6 +382,10 @@ def run_generation(args):
 
     def do_call():
         gen_kwargs["model"] = current_model
+        if current_model == "doubao-seedream-4-5-251128":
+            gen_kwargs.pop("output_format", None)
+        else:
+            gen_kwargs["output_format"] = args.output_format
         return client.images.generate(**gen_kwargs)
 
     def try_fallback():
