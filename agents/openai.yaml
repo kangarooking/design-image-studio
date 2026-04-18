@@ -1,4 +1,0 @@
-interface:
-  display_name: "Design Image Studio"
-  short_description: "Design-directed AI image generation for posters, product shots, PPT visuals, infographics, and teaching diagrams"
-  default_prompt: "Use $design-image-studio to turn this brief into a strong design prompt and generate the image directly."

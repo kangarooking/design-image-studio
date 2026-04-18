@@ -61,7 +61,25 @@
 
 ![](./assets/demo-poster.png)
 
-## 快速开始
+## 最简单的使用方式
+
+直接对你的 Agent 说：
+
+```text
+帮我安装这个skill：https://github.com/kangarooking/design-image-studio
+```
+
+安装完成后，再直接说你的需求即可，例如：
+
+```text
+用 design-image-studio 帮我生成一张 AI 训练营招生海报，强调速度、增长、实战
+```
+
+```text
+用 design-image-studio 帮我生成一张高端陶瓷咖啡杯商品图，适合电商首图
+```
+
+## 本地运行（进阶）
 
 ### 1. 安装依赖
 
@@ -158,8 +176,6 @@ design-image-studio/
 ├── README.md
 ├── LICENSE
 ├── SKILL.md
-├── agents/
-│   └── openai.yaml
 ├── assets/
 │   └── demo-poster.png
 ├── references/
@@ -211,4 +227,3 @@ design-image-studio/
 ## License
 
 MIT. See [LICENSE](./LICENSE).
-
