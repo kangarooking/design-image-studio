@@ -93,6 +93,28 @@
 用 design-image-studio 帮我生成一张高端陶瓷咖啡杯商品图，适合电商首图
 ```
 
+## 使用前提
+
+这个 skill 依赖火山引擎 ARK 的 API Key。
+
+- 你需要先申请并配置 `ARK_API_KEY`
+- Key 获取入口见：[火山引擎 ARK API Key 页面](https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey)
+- 调用会产生费用，本质上是在调用火山引擎的图像生成模型能力
+
+本仓库当前主要支持并实际调用的是字节的豆包生图模型：
+
+- `doubao-seedream-4-5-251128`
+- `doubao-seedream-5-0-260128`
+- `doubao-seedream-5-0-lite-260128`
+
+其中常用关系可以简单理解为：
+
+- `Seedream 4.5`：更偏高质量成品
+- `Seedream 5.0`：更强的高阶生成版本，可显式指定
+- `Seedream 5.0 lite`：默认的高性价比版本
+
+也就是说，这个 skill 虽然对外表现成一个“设计编译 + 生图”工作流，但底层生成模型其实就是豆包生图对应的 Seedream 系列。
+
 ## 本地运行（进阶）
 
 ### 1. 安装依赖
@@ -106,6 +128,14 @@ pip install "volcengine-python-sdk[ark]"
 ```bash
 export ARK_API_KEY="your_volcengine_ark_api_key"
 ```
+
+如果没有 Key，可以从 [火山引擎 ARK API Key 页面](https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey) 获取。
+
+注意：
+
+- 调用会消耗额度并产生费用
+- 不同模型单次生成成本不同
+- `Seedream 4.5 / 5.0 / 5.0 lite` 可以通过参数显式指定
 
 ### 3. 直接生成一张海报
 
@@ -145,6 +175,18 @@ python3 scripts/design_image.py \
   --aspect 3:4 \
   --quality final \
   --output poster.png
+```
+
+### 显式指定模型
+
+```bash
+python3 scripts/design_image.py \
+  --task poster \
+  --brief "职场 AI 提效训练营宣传海报，专业、高级、活力感，面向职场人和管理者" \
+  --direction balanced \
+  --model-override doubao-seedream-5-0-260128 \
+  --aspect 3:4 \
+  --output poster-seedream5.png
 ```
 
 ### 商品图

@@ -453,6 +453,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--lighting", default=None, help="Lighting strategy override")
     parser.add_argument("--palette", default=None, help="Palette strategy override")
     parser.add_argument("--quality", default="final", choices=["draft", "final", "premium"])
+    parser.add_argument("--model-override", default=None, help="Explicit model id override such as doubao-seedream-5-0-260128")
     parser.add_argument("--image", nargs="+", default=None, help="Reference image path(s) or URL(s)")
     parser.add_argument("--output", "-o", default=None, help="Output filename")
     parser.add_argument("--output-dir", default=None, help="Output directory")
@@ -474,7 +475,7 @@ def main() -> int:
     args = parse_args()
     task = normalize_task(args.task, args.brief)
     args.aspect = args.aspect or DEFAULT_ASPECT[task]
-    model = choose_model(args.quality)
+    model = args.model_override or choose_model(args.quality)
     size = choose_size(task, args.aspect, args.quality)
 
     design_reasoning = make_design_reasoning(args, task)
