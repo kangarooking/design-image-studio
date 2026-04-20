@@ -75,6 +75,40 @@
 
 ![](./assets/demo-poster.png)
 
+## Case Gallery
+
+下面这些案例图都来自同一套 `design-image-studio` 工作流，重点不是“单张图好不好看”，而是这个 skill 能否稳定覆盖不同设计任务。
+
+### 海报方向稿
+
+同一份 brief 先出多个方向，适合做活动海报、课程海报、社群传播图的第一轮探索。
+
+![](./assets/examples/poster-directions.png)
+
+### 商品图素材组
+
+同一商品一次性生成多场景电商图，适合主图、办公场景、通勤场景、细节图和社交媒体展示图。
+
+![](./assets/examples/product-multi-scene.png)
+
+### PPT 配图方向稿
+
+适合企业内部分享、培训课件和汇报材料。重点不是做海报感，而是帮助观众更快理解观点。
+
+![](./assets/examples/ppt-visual-directions.png)
+
+### 信息图结构图
+
+适合流程说明、培训材料和结构化表达。重点是把信息重新组织成更容易被看懂的层级。
+
+![](./assets/examples/infographic-structure.png)
+
+### 教学演示图
+
+适合知识讲解、内训和 AI 工作流说明。下面这张图展示的是 `RAG（AI知识库）工作流程` 的教学型表达。
+
+![](./assets/examples/teaching-rag-flow.png)
+
 ## 最简单的使用方式
 
 直接对你的 Agent 说：
